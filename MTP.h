@@ -32,9 +32,9 @@
 // #include <HardwareSerial.h>
 #include <usb_dev.h>
 #include <SPI.h>
-#include "SdFat.h"
+#include <SdFat.h>
 
-SdFatSdioEX SD;
+SdFs SD;
 
 // TODO:
 //   support multiple storages
@@ -88,11 +88,11 @@ public:
 // Storage implementation for SD. SD needs to be already initialized.
 class MTPStorage_SD : public MTPStorageInterface {
 private:
-  File index_;
+  FsFile index_;
 
   uint8_t mode_ = 0;
   uint32_t open_file_ = 0xFFFFFFFEUL;
-  File f_;
+  FsFile f_;
   uint32_t index_entries_ = 0;
 
   struct Record {
@@ -208,7 +208,7 @@ private:
       int sibling = 0;
       while (true) {
         mtp_lock_storage(true);
-        File child = f_.openNextFile();
+        FsFile child = f_.openNextFile();
         mtp_lock_storage(false);
 
         if (!child) break;
